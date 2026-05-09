@@ -1,9 +1,28 @@
-import { View, Text } from "react-native"
+import { View, Text, Button, StyleSheet } from "react-native"
 
-export default function HomeScreen(){
+
+export default function HomeScreen({navigation}){
     return(
-        <View>
-            <Text>Olá bem vindo a home</Text>
+        <View style={style.container}>
+            <Text style={style.title}> Buscar CEP</Text>
+            <Button
+                title="Buscar CEP"
+                onPress={()=> navigation.navigate('Cep')
+                }
+            />
         </View>
     )
 }
+
+const style = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    title: {
+        fontSize: 28,
+        marginBottom: 20,
+        fontWeight: 'bold'
+    }
+});

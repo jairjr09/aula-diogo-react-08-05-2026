@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { View, Text, TextInput, Button, StyleSheet } from "react-native"
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from "react-native"
 
 import api from '../service/api';
 
@@ -7,13 +7,37 @@ export default function CepScreen(){
     const [cep, setCep] = useState('');
     const [dados, setDados] = useState(null);
 
+    const [loading, setLoading] = useState(false);
+    const [erro, setErro] = useState();
+
+    function handleChangeCep(texto) {
+        if(cep.length !== 8){
+            const apenasNumero = texto.replace(/\D/g, '').slice(0, 8);
+            setCep(apenasNumero);
+        }
+    }
+
     async function buscarCep() {
+        
+        if(cep.length !== 8){
+            setErro('Digite um CEP válido com 8 digitos.');
+            return;
+        }
+
+        setErro('');
+        setLoading(true);
+
         try{
             const response = await api.get(`/${cep}/json`);
-            console.log(response.data)
-            setDados(response.data);
+            if(response.data.erro){
+                setErro('CEP não encontrado');
+            } else {
+                setDados(response.data);
+            }
         } catch (error) {
-            alert('Erro ao buscar CEP')
+            setErro('Erro ao buscar CEP')
+        } finally {
+            setLoading(false);
         }
     }
     
@@ -24,13 +48,22 @@ export default function CepScreen(){
                 placeholder="Digite o CEP"
                 style={style.input}
                 value={cep}
-                onChangeText={setCep}
+                onChangeText={handleChangeCep}
                 keyboardType="numeric"
+                maxLength={8}
             />
             <Button 
                 title="Buscar"
                 onPress={buscarCep}
             />
+
+            {erro !== '' && (
+                <Text style={style.erro}>{erro}</Text>
+            )}
+
+            {loading && (
+                <ActivityIndicator size={"large"} color="#FF0000" style={{marginTop: 20}}/>
+            )}
 
             {dados && (
                 <View style={style.resultado}>
@@ -65,5 +98,9 @@ const style = StyleSheet.create({
     resultado: {
         marginTop: 20,
         gap: 5
+    },
+    erro:{
+        color: "red",
+        marginTop: 10
     }
 })

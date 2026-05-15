@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { use, useState } from "react"
 import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from "react-native"
 
 import api from '../service/api';
+import { useApp } from "../context/AppContext";
 
 export default function CepScreen(){
     const [cep, setCep] = useState('');
@@ -9,6 +10,8 @@ export default function CepScreen(){
 
     const [loading, setLoading] = useState(false);
     const [erro, setErro] = useState();
+
+    const { adicionarHistorico } = useApp();
 
     function handleChangeCep(texto) {
         if(cep.length !== 8){

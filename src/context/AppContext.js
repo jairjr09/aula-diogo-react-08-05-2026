@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const AppContext = createContext();
 
 export function AppProvider({ children }){
 
@@ -19,4 +22,10 @@ export function AppProvider({ children }){
         }
     }
 
+    return false;
+
+}
+
+export function useApp(){
+    return useContext(AppContext);
 }

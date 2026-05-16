@@ -4,7 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from "re
 import api from '../service/api';
 import { useApp } from "../context/AppContext";
 
-export default function CepScreen(){
+export default function CepScreen({ navigation }){
     const [cep, setCep] = useState('');
     const [dados, setDados] = useState(null);
 
@@ -34,8 +34,10 @@ export default function CepScreen(){
             const response = await api.get(`/${cep}/json`);
             if(response.data.erro){
                 setErro('CEP não encontrado');
+                setDados(null);
             } else {
                 setDados(response.data);
+                adicionarHistorico(response.data);
             }
         } catch (error) {
             setErro('Erro ao buscar CEP')
@@ -76,6 +78,14 @@ export default function CepScreen(){
                     <Text>Estado: {dados.uf}</Text>
                 </View>
             )}
+
+            <View style={{marginTop: 20}}>
+                <Button
+                    title="Ver Historico"
+                    onPress={() => navigation.navigate('Historico')}
+                    color="#666"
+                />
+            </View>
 
         </View>
     )

@@ -10,6 +10,12 @@ export default function HomeScreen({navigation}){
                 onPress={()=> navigation.navigate('Cep')
                 }
             />
+
+            <Button
+                title="Geolocalização"
+                onPress={()=> navigation.navigate('Geo')
+                }
+            />
         </View>
     )
 }
